@@ -1,10 +1,14 @@
 const express = require('express');
+const routes = require('./routes');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const { port } = require('./config');
+
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-});
+routes(app);
 
-app.listen(8000, () => {
-  console.log('Example app listening on port 8000!')
-});
+app.listen(port, () => console.log(`Server runnig on port ${port}.`));
+
+module.exports = app;
