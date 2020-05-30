@@ -1,0 +1,19 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "NodeJs repository developed in Express with MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkdesouza/userNodeJs.git"
+  },
+  "author": "Patrick de Souza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pkdesouza/userNodeJs/issues"
+  },
+  "homepage": "https://github.com/pkdesouza/userNodeJs#readme"
+}
