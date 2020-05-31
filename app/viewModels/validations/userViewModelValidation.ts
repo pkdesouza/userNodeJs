@@ -1,4 +1,4 @@
-import { IUserViewModel } from "../IUserViewModel";
+import { IUserViewModel } from "../iUserViewModel";
 
 export function UserIsValid(userViewModel: IUserViewModel): boolean {
   return (userViewModel.email &&
@@ -9,6 +9,6 @@ export function UserIsValid(userViewModel: IUserViewModel): boolean {
     typeof userViewModel.password === 'string');
 }
 export function UserIdIsValid(id: string): boolean {
-  return typeof id !== 'string' || !id;
+  return typeof id === 'string' || id;
 }
 

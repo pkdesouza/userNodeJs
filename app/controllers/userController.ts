@@ -6,48 +6,67 @@ class UserController {
 
   static async getAll(_req: Request, res: Response) {
     try {
-      const user = await UserCollection.find({});
-      if (user) {
-        return res.status(200).json(user);
-      } else {
-        return res.status(401).send({ error: 'Erro ao buscar usuário!' })
-      }
+      const users = await UserCollection.find({});
+      if (users)
+        return res.status(200).json(users);
+      return res.status(404).send({ error: 'Nenhum usuário encontrado!' })
     } catch (err) {
-      return res.status(500).send({ error: 'Erro ao buscar os usuários!' });
+      return res.status(500).send({ error: 'Erro ao buscar os usuários!', exception: err });
     }
   }
 
   static async getById(req: Request, res: Response) {
+
+    const { id } = req.params;
+    if (!UserIdIsValid(id))
+      return res.status(400).send({ error: 'Modelo da requisição inválido' });
     try {
-      const { id } = req.params;
-      if (UserIdIsValid(id))
-        return res.status(400).send({ error: 'Modelo da requisição inválido' });
       const user = await UserCollection.findById(id);
-      if (user) {
+      if (user)
         return res.status(200).json(user);
-      } else {
-        return res.status(404).send({ error: 'Usuário não encontrado!' })
-      }
+      return res.status(404).send({ error: 'Nenhum usuário encontrado!' })
     } catch (err) {
-      return res.status(500).send({ error: 'Erro ao buscar o usuário!' });
+      return res.status(500).send({ error: 'Erro ao buscar o usuário!', exception: err });
     }
   }
   static async create(req: Request, res: Response) {
+
+    const { email, name, password } = req.body;
+    if (!UserIsValid({ email, name, password }))
+      return res.status(400).send({ error: 'Modelo da requisição inválido' });
+
     try {
-      const { email, name, password } = req.body;
-      if (!UserIsValid({ email, name, password }))
-        return res.status(400).send({ error: 'Modelo da requisição inválido' });
       if (await UserCollection.findOne({ email }))
         return res.status(400).send({ error: 'Usuário já existe!' });
 
-      const user = await UserCollection.create({ email, name, password });
-      if (user) {
-        return res.status(201).json();
-      } else {
-        return res.status(401).send({ error: 'Erro ao salvar usuário!' })
-      }
+      await UserCollection.create({ email, name, password });
+      return res.status(201).json();
     } catch (ex) {
-      return res.status(500).send({ error: 'Erro ao criar o usuário!', err: ex });
+      return res.status(500).send({ error: 'Erro ao criar o usuário!', exception: ex });
+    }
+  }
+  static async update(req: Request, res: Response) {
+    const { email, name, password } = req.body;
+    const { id } = req.params;
+    if (!UserIsValid({ email, name, password }) || !UserIdIsValid(id))
+      return res.status(400).send({ error: 'Modelo da requisição inválido' });
+    try {
+      await UserCollection.findByIdAndUpdate(id, req.body);
+      return res.status(200).json();
+    } catch (ex) {
+      return res.status(500).send({ error: 'Erro ao criar o usuário!', exception: ex });
+    }
+  }
+  static async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    if (!UserIdIsValid(id))
+      return res.status(400).send({ error: 'Modelo da requisição inválido' });
+
+    try {
+      await UserCollection.findByIdAndDelete(id);
+      return res.status(200).send({ message: 'Usuário deletado com sucesso!' });
+    } catch (err) {
+      return res.status(500).send({ error: 'Erro ao deletar o usuário!' });
     }
   }
 }
