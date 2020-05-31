@@ -1,8 +1,8 @@
-import { model, Document } from 'mongoose';
+import { model, Document, HookNextFunction } from 'mongoose';
 import { UserSchema } from '../models/userSchema';
 import bcrypt from 'bcrypt';
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function (next: HookNextFunction) {
   const user: Document | any = this;
 
   if (!user.isModified('password')) return next();
@@ -13,7 +13,7 @@ UserSchema.pre('save', function (next) {
   })
 });
 
-UserSchema.pre('findOneAndUpdate', function (next) {
+UserSchema.pre('findOneAndUpdate', function (next: HookNextFunction) {
   const user: Document | any = this;
   if (!user._update.password) return next()
 

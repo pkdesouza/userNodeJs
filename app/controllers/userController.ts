@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import UserCollection from '../collections/user';
 import { UserIsValid, UserIdIsValid } from '../viewModels/validations/userViewModelValidation';
+import { Document } from 'mongoose';
+import { IUserViewModel } from '../viewModels/iUserViewModel';
 class UserController {
   constructor() { }
 
