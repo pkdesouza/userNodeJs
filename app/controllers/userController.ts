@@ -16,10 +16,10 @@ class UserController {
   }
 
   static async getById(req: Request, res: Response) {
-
     const { id } = req.params;
     if (!UserIdIsValid(id))
       return res.status(400).send({ error: 'Modelo da requisição inválido' });
+
     try {
       const user = await UserCollection.findById(id);
       if (user)
@@ -30,7 +30,6 @@ class UserController {
     }
   }
   static async create(req: Request, res: Response) {
-
     const { email, name, password } = req.body;
     if (!UserIsValid({ email, name, password }))
       return res.status(400).send({ error: 'Modelo da requisição inválido' });
@@ -50,8 +49,9 @@ class UserController {
     const { id } = req.params;
     if (!UserIsValid({ email, name, password }) || !UserIdIsValid(id))
       return res.status(400).send({ error: 'Modelo da requisição inválido' });
+
     try {
-      await UserCollection.findByIdAndUpdate(id, req.body);
+      await UserCollection.findOneAndUpdate({ _id: id }, { email, name, password });
       return res.status(200).json();
     } catch (ex) {
       return res.status(500).send({ error: 'Erro ao criar o usuário!', exception: ex });
